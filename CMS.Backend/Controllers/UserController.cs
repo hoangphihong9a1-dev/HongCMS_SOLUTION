@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using CMS.Data;
 using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,7 +32,7 @@ namespace CMS.Backend.Controllers
         // POST: /User/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(User model)
+        public IActionResult Create(User model, string password)
         {
             // Kiểm tra tên đăng nhập đã tồn tại chưa
             var exists = _context.Users.Any(u => u.Username == model.Username);
@@ -38,8 +41,16 @@ namespace CMS.Backend.Controllers
                 ModelState.AddModelError("Username", "Tên đăng nhập này đã có người dùng!");
             }
 
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ModelState.AddModelError("PasswordHash", "Mật khẩu không được để trống!");
+            }
+
             if (ModelState.IsValid)
             {
+                var hasher = new PasswordHasher<User>();
+                model.PasswordHash = hasher.HashPassword(model, password);
+                
                 _context.Users.Add(model);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -66,18 +77,23 @@ namespace CMS.Backend.Controllers
             var user = _context.Users.Find(id);
             if (user == null) return NotFound();
 
+            // Loại bỏ kiểm tra PasswordHash khỏi ModelState vì nó không được bind trực tiếp từ form
+            ModelState.Remove("PasswordHash");
+
             if (ModelState.IsValid)
             {
                 user.FullName = model.FullName;
                 user.Role = model.Role;
 
-                // Nếu nhập mật khẩu mới thì đổi, nếu để trống thì giữ mật khẩu cũ
+                // Nếu nhập mật khẩu mới thì băm và đổi, nếu để trống thì giữ mật khẩu cũ
                 if (!string.IsNullOrWhiteSpace(newPassword))
                 {
-                    user.PasswordHash = newPassword;
+                    var hasher = new PasswordHasher<User>();
+                    user.PasswordHash = hasher.HashPassword(user, newPassword);
                 }
 
                 _context.SaveChanges();
+                TempData["SuccessMessage"] = "Cập nhật thành viên thành công!";
                 return RedirectToAction(nameof(Index));
             }
 

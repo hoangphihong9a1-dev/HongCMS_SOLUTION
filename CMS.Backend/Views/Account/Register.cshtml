@@ -1,0 +1,73 @@
+@model CMS.Backend.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Tạo tài khoản mới</h2>
+            <p>Đăng ký để trở thành quản trị viên</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger p-2 mb-3 small">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger m-0 list-unstyled" })
+            </div>
+        }
+
+        <form asp-action="Register" method="post">
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label">Tên đăng nhập</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập..." required />
+                </div>
+                <span asp-validation-for="Username" class="text-danger small mt-1 d-block"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label">Họ và tên</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                    <input asp-for="FullName" class="form-control" placeholder="Nhập họ tên đầy đủ..." required />
+                </div>
+                <span asp-validation-for="FullName" class="text-danger small mt-1 d-block"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu..." required />
+                </div>
+                <span asp-validation-for="Password" class="text-danger small mt-1 d-block"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu..." required />
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger small mt-1 d-block"></span>
+            </div>
+
+            <button type="submit" class="btn-auth">Đăng ký</button>
+        </form>
+
+        <div class="auth-footer">
+            Đã có tài khoản? <a asp-action="Login">Đăng nhập</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
