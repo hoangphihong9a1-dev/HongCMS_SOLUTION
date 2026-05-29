@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Từ chối truy cập";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="auth-container">
+    <div class="auth-card text-center">
+        <div class="auth-logo">
+            <div class="logo-icon bg-danger" style="background: linear-gradient(135deg, #e63946, #d62828);">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="text-white">Từ chối truy cập</h2>
+            <p class="text-light opacity-75">Bạn không có quyền truy cập vào trang này.</p>
+        </div>
+
+        <div class="mb-4">
+            <p class="text-white">Trang này chỉ dành cho tài khoản có quyền <strong>Quản trị viên (Admin)</strong>.</p>
+        </div>
+
+        <div class="d-grid gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-light rounded-pill">Quay lại trang chủ</a>
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-link text-white-50 text-decoration-none small mt-2">Đăng xuất và dùng tài khoản khác</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -16,7 +16,7 @@
 
         <div class="mb-3">
             <label asp-for="CategoryProductId" class="form-label fw-bold">Danh mục</label>
-            <select asp-for="CategoryProductId" class="form-select" asp-items="ViewBag.CategoryProductId">
+            <select asp-for="CategoryProductId" class="form-select" asp-items="ViewBag.CategoryProductList">
                 <option value="">-- Chọn danh mục --</option>
             </select>
             <span asp-validation-for="CategoryProductId" class="text-danger"></span>

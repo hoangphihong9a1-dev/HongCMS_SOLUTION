@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using CMS.Data;
 using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,7 +31,7 @@ namespace CMS.Backend.Controllers
         // GET: /Product/Create
         public IActionResult Create()
         {
-            ViewBag.CategoryProductId = new SelectList(_context.CategoriesProducts, "Id", "Name");
+            ViewBag.CategoryProductList = new SelectList(_context.CategoriesProducts, "Id", "Name");
             return View();
         }
 
@@ -44,7 +46,7 @@ namespace CMS.Backend.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.CategoryProductId = new SelectList(_context.CategoriesProducts, "Id", "Name", model.CategoryProductId);
+            ViewBag.CategoryProductList = new SelectList(_context.CategoriesProducts, "Id", "Name", model.CategoryProductId);
             return View(model);
         }
 
@@ -54,7 +56,7 @@ namespace CMS.Backend.Controllers
             var product = _context.Products.Find(id);
             if (product == null) return NotFound();
             
-            ViewBag.CategoryProductId = new SelectList(_context.CategoriesProducts, "Id", "Name", product.CategoryProductId);
+            ViewBag.CategoryProductList = new SelectList(_context.CategoriesProducts, "Id", "Name", product.CategoryProductId);
             return View(product);
         }
 
@@ -71,7 +73,7 @@ namespace CMS.Backend.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.CategoryProductId = new SelectList(_context.CategoriesProducts, "Id", "Name", model.CategoryProductId);
+            ViewBag.CategoryProductList = new SelectList(_context.CategoriesProducts, "Id", "Name", model.CategoryProductId);
             return View(model);
         }
 
