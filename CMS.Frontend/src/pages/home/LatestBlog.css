@@ -1,0 +1,27 @@
+.latest-blog-section {
+  padding: 60px 0;
+  background: #ffffff;
+}
+
+.homepage-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+@media (max-width: 640px) {
+  .homepage-blog-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.empty-blog-msg {
+  text-align: center;
+  padding: 40px;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 15px;
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+}

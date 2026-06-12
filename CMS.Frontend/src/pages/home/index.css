@@ -1,0 +1,39 @@
+.home-page-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.shop-loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 15px;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.shop-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(13, 148, 136, 0.1);
+  border-top-color: #0d9488;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
