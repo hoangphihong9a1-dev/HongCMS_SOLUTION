@@ -1,0 +1,52 @@
+.shop-status-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #64748b;
+  font-weight: 500;
+  width: 100%;
+}
+
+.shop-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(13, 148, 136, 0.1);
+  border-top-color: #0d9488;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px dashed rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.empty-state p {
+  font-size: 14.5px;
+  color: #64748b;
+  margin: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

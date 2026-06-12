@@ -1,0 +1,131 @@
+.blog-detail-page {
+  padding: 50px 0;
+  background: #ffffff;
+  min-height: 80vh;
+}
+
+.blog-post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.back-to-blog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  transition: color 0.2s ease;
+}
+
+.back-to-blog-link:hover {
+  color: #0d9488;
+}
+
+.post-detail-header {
+  margin-bottom: 30px;
+}
+
+.post-detail-category {
+  display: inline-block;
+  background: rgba(13, 148, 136, 0.08);
+  color: #0d9488;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.post-detail-title {
+  font-size: 32px;
+  font-weight: 850;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.5px;
+}
+
+.post-detail-meta {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 20px;
+}
+
+.post-detail-cover {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.post-detail-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.post-detail-body {
+  font-size: 16px;
+  color: #334155;
+  line-height: 1.8;
+}
+
+.post-detail-body p {
+  margin-bottom: 24px;
+}
+
+.post-detail-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.post-detail-body h2, .post-detail-body h3 {
+  color: #0f172a;
+  margin: 40px 0 20px 0;
+  font-weight: 800;
+}
+
+/* Loading & Error Styles */
+.blog-detail-loading, .blog-detail-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.bd-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(13, 148, 136, 0.1);
+  border-top-color: #0d9488;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.blog-detail-error h2 {
+  font-size: 20px;
+  color: #1e293b;
+  margin: 15px 0 8px 0;
+}
+
+.blog-detail-error p {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
