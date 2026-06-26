@@ -5,6 +5,13 @@ export default function CategoryMenu({ categories }) {
   // Biểu tượng tĩnh cho các loại danh mục
   const icons = ['👕', '👗', '👜', '👟', '🕶️', '⌚', '📦'];
 
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    const baseUrl = (import.meta.env.VITE_API_URL || 'https://localhost:7296/api').replace(/\/api\/?$/, '');
+    return `${baseUrl}${url}`;
+  };
+
   return (
     <section className="category-menu-section">
       <div className="section-container">
@@ -21,9 +28,17 @@ export default function CategoryMenu({ categories }) {
               className="category-menu-card"
             >
               <div className="category-menu-icon-wrap">
-                <span className="category-menu-icon">
-                  {icons[index % icons.length]}
-                </span>
+                {cat.imageUrl ? (
+                  <img
+                    src={getImageUrl(cat.imageUrl)}
+                    alt={cat.name}
+                    className="category-menu-img"
+                  />
+                ) : (
+                  <span className="category-menu-icon">
+                    {icons[index % icons.length]}
+                  </span>
+                )}
               </div>
               <h3 className="category-menu-name">{cat.name}</h3>
               {cat.description && <p className="category-menu-desc">{cat.description}</p>}

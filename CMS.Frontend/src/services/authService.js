@@ -16,6 +16,19 @@ const authService = {
       address: customerData.address || '',
     };
     return axiosClient.post('/CustomersApi', payload);
+  },
+
+  // Cập nhật thông tin khách hàng
+  updateProfile: (id, customerData) => {
+    const payload = {
+      id: id,
+      fullName: customerData.fullName,
+      email: customerData.email,
+      phone: customerData.phone || '',
+      address: customerData.address || '',
+      password: customerData.password,
+    };
+    return axiosClient.put(`/CustomersApi/${id}`, payload);
   }
 };
 

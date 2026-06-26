@@ -15,9 +15,27 @@ namespace CMS.Backend.Controllers.Api
         public CustomersApiController(ApplicationDbContext context) { _context = context; }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Customer>>> GetAll(
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            return Ok(await _context.Customers.OrderBy(c => c.FullName).ToListAsync());
+            var query = _context.Customers.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.FullName.Contains(keyword) || 
+                                         c.Email.Contains(keyword) || 
+                                         (c.Phone != null && c.Phone.Contains(keyword)));
+            }
+
+            var customers = await query
+                .OrderBy(c => c.FullName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(customers);
         }
 
         [HttpGet("{id}")]

@@ -48,8 +48,8 @@ export default function ShopSidebar({
           <input
             type="range"
             min="0"
-            max="10000000"
-            step="100000"
+            max="50000000"
+            step="1000000"
             value={priceRange}
             onChange={handlePriceChange}
             className="price-slider"

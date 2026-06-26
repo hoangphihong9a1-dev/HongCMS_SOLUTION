@@ -21,16 +21,26 @@ namespace CMS.Backend.Controllers.Api
             _context = context;
         }
 
-        /// <summary>
-        /// Lấy tất cả danh mục sản phẩm
-        /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CategoryProduct>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CategoryProduct>>> GetAll(
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            var categories = await _context.CategoriesProducts
+            var query = _context.CategoriesProducts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.Name.Contains(keyword) || (c.Description != null && c.Description.Contains(keyword)));
+            }
+
+            var categories = await query
                 .OrderBy(c => c.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
             return Ok(categories);
         }
 
@@ -82,6 +92,7 @@ namespace CMS.Backend.Controllers.Api
 
             existing.Name = model.Name;
             existing.Description = model.Description;
+            existing.ImageUrl = model.ImageUrl;
 
             await _context.SaveChangesAsync();
             return NoContent();

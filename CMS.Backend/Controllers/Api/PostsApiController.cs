@@ -21,13 +21,13 @@ namespace CMS.Backend.Controllers.Api
             _context = context;
         }
 
-        /// <summary>
-        /// Lấy tất cả bài viết, có thể lọc theo danh mục
-        /// </summary>
-        /// <param name="categoryId">Id danh mục để lọc (tùy chọn)</param>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Post>>> GetAll([FromQuery] int? categoryId)
+        public async Task<ActionResult<IEnumerable<Post>>> GetAll(
+            [FromQuery] int? categoryId = null,
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
             var query = _context.Posts
                 .Include(p => p.Category)
@@ -36,8 +36,15 @@ namespace CMS.Backend.Controllers.Api
             if (categoryId.HasValue)
                 query = query.Where(p => p.CategoryId == categoryId.Value);
 
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(p => (p.Title != null && p.Title.Contains(keyword)) || (p.Content != null && p.Content.Contains(keyword)));
+            }
+
             var posts = await query
                 .OrderByDescending(p => p.CreatedDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return Ok(posts);

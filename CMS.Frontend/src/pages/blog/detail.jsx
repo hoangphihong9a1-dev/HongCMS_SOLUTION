@@ -35,7 +35,7 @@ export default function BlogDetail() {
   };
 
   const getImageUrl = (url) => {
-    if (!url) return 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80';
+    if (!url) return 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80';
     if (url.startsWith('http')) return url;
     return `https://localhost:7296${url.startsWith('/') ? '' : '/'}${url}`;
   };
@@ -93,7 +93,7 @@ export default function BlogDetail() {
             src={getImageUrl(post.imageUrl)}
             alt={post.title}
             onError={(e) => {
-              e.target.src = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80';
+              e.target.src = 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80';
             }}
           />
         </div>

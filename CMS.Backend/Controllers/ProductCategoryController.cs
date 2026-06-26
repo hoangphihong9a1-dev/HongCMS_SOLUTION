@@ -3,6 +3,8 @@ using CMS.Data;
 using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace CMS.Backend.Controllers
 {
@@ -10,10 +12,12 @@ namespace CMS.Backend.Controllers
     public class ProductCategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductCategoryController(ApplicationDbContext context)
+        public ProductCategoryController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: /ProductCategory
@@ -34,8 +38,28 @@ namespace CMS.Backend.Controllers
         // POST: /ProductCategory/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryProduct model)
+        public IActionResult Create(CategoryProduct model, IFormFile? ImageFile)
         {
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(ImageFile.FileName).ToLowerInvariant();
+                if (allowedExts.Contains(ext))
+                {
+                    var uniqueName = $"{Guid.NewGuid():N}{ext}";
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "categories");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    var filePath = Path.Combine(uploadsDir, uniqueName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(stream);
+                    }
+
+                    model.ImageUrl = $"/uploads/categories/{uniqueName}";
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _context.CategoriesProducts.Add(model);
@@ -56,9 +80,37 @@ namespace CMS.Backend.Controllers
         // POST: /ProductCategory/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, CategoryProduct model)
+        public IActionResult Edit(int id, CategoryProduct model, IFormFile? ImageFile)
         {
             if (id != model.Id) return NotFound();
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(ImageFile.FileName).ToLowerInvariant();
+                if (allowedExts.Contains(ext))
+                {
+                    var uniqueName = $"{Guid.NewGuid():N}{ext}";
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "categories");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    var filePath = Path.Combine(uploadsDir, uniqueName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(stream);
+                    }
+
+                    model.ImageUrl = $"/uploads/categories/{uniqueName}";
+                }
+            }
+            else
+            {
+                var existing = _context.CategoriesProducts.AsNoTracking().FirstOrDefault(c => c.Id == model.Id);
+                if (existing != null)
+                {
+                    model.ImageUrl = existing.ImageUrl;
+                }
+            }
 
             if (ModelState.IsValid)
             {

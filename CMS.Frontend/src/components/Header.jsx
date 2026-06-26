@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ShoppingCart, LogOut, LayoutDashboard } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, LogOut, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
@@ -62,11 +62,10 @@ export default function Header() {
                       <p className="user-email">{user.email}</p>
                     </div>
                     <div className="dropdown-divider"></div>
-                    {/* Admin portal shortcut linking to ASP.NET Backend Portal */}
-                    <a href="https://localhost:7296/" target="_blank" rel="noopener noreferrer" className="dropdown-item">
-                      <LayoutDashboard size={16} />
-                      <span>Quản trị hệ thống</span>
-                    </a>
+                    <Link to="/profile" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      <User size={16} />
+                      <span>Trang cá nhân</span>
+                    </Link>
                     <button onClick={handleLogout} className="dropdown-item logout-btn">
                       <LogOut size={16} />
                       <span>Đăng xuất</span>

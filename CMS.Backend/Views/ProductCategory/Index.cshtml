@@ -31,6 +31,7 @@
             <tr>
                 <th>ID</th>
                 <th>Tên danh mục</th>
+                <th>Hình ảnh</th>
                 <th>Mô tả</th>
                 <th>Thao tác</th>
             </tr>
@@ -41,6 +42,16 @@
                 <tr>
                     <td>@item.Id</td>
                     <td><strong>@item.Name</strong></td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="max-height: 50px; max-width: 50px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có ảnh</span>
+                        }
+                    </td>
                     <td>@(item.Description ?? "Không có mô tả")</td>
                     <td>
                         <div class="d-flex gap-2">

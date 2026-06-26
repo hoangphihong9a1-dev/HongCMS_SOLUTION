@@ -13,7 +13,7 @@ export default function Footer() {
               <span>Hong<span className="logo-accent">CMS</span></span>
             </Link>
             <p className="brand-desc">
-              Thương hiệu thời trang hàng đầu dành cho giới trẻ, luôn cập nhật những xu hướng thời trang mới nhất với chất lượng cao cấp và giá cả hợp lý.
+              Hệ thống bán lẻ thiết bị công nghệ chính hãng hàng đầu, mang đến những giải pháp công nghệ hiện đại, tiện ích với giá tốt nhất thị trường.
             </p>
             <div className="social-links">
               <a href="#" aria-label="Facebook">
@@ -42,9 +42,9 @@ export default function Footer() {
             <h4>Danh Mục</h4>
             <ul>
               <li><Link to="/shop">Tất cả sản phẩm</Link></li>
-              <li><Link to="/shop">Quần áo nam</Link></li>
-              <li><Link to="/shop">Váy đầm nữ</Link></li>
-              <li><Link to="/blog">Tin tức phối đồ</Link></li>
+              <li><Link to="/shop">Điện thoại di động</Link></li>
+              <li><Link to="/shop">Máy tính xách tay</Link></li>
+              <li><Link to="/blog">Đánh giá công nghệ</Link></li>
             </ul>
           </div>
 
@@ -61,7 +61,7 @@ export default function Footer() {
               </li>
               <li>
                 <Mail size={16} />
-                <span>support@hongcmsfashion.com</span>
+                <span>support@hongcmstech.com</span>
               </li>
             </ul>
           </div>

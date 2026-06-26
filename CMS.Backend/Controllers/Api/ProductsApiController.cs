@@ -26,12 +26,44 @@ namespace CMS.Backend.Controllers.Api
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAll(
+            [FromQuery] int? categoryProductId = null,
+            [FromQuery] double? minPrice = null,
+            [FromQuery] double? maxPrice = null,
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            var products = await _context.Products
+            var query = _context.Products.AsQueryable();
+
+            if (categoryProductId.HasValue)
+            {
+                query = query.Where(p => p.CategoryProductId == categoryProductId.Value);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => (double)p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => (double)p.Price <= maxPrice.Value);
+            }
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                // Thêm kiểm tra Null cho Description trước khi Contains
+                query = query.Where(p => p.Name.Contains(keyword) || (p.Description != null && p.Description.Contains(keyword)));
+            }
+
+            var products = await query
                 .Include(p => p.CategoryProduct)
                 .OrderBy(p => p.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
             return Ok(products);
         }
 

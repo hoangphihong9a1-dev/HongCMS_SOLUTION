@@ -30,15 +30,21 @@
                 <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="Product" asp-action="Index">
                     <i class="fas fa-box me-3 text-secondary"></i> Quản lý Sản phẩm
                 </a>
+                <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="ProductCategory" asp-action="Index">
+                    <i class="fas fa-tags me-3 text-secondary"></i> Danh mục sản phẩm
+                </a>
                 <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="Order" asp-action="Index">
                     <i class="fas fa-shopping-cart me-3 text-secondary"></i> Quản lý Đơn hàng
                 </a>
                 <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="Customer" asp-action="Index">
                     <i class="fas fa-users me-3 text-secondary"></i> Quản lý Khách hàng
                 </a>
-                <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="User" asp-action="Index">
-                    <i class="fas fa-user-shield me-3 text-secondary"></i> Quản lý Thành viên
-                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="list-group-item list-group-item-action list-group-item-dark bg-dark text-white px-4 py-3 border-0" asp-controller="User" asp-action="Index">
+                        <i class="fas fa-user-shield me-3 text-secondary"></i> Quản lý Thành viên
+                    </a>
+                }
             </div>
         </div>
 
@@ -55,7 +61,11 @@
                         <ul class="navbar-nav ms-auto mt-2 mt-lg-0 align-items-center">
                             <li class="nav-item me-4 d-flex align-items-center">
                                 <i class="fas fa-user-circle text-secondary me-2 fs-5"></i>
-                                <span class="text-muted">Chào, <strong class="text-dark">@User.Identity?.Name</strong> <span class="badge bg-primary ms-1">Administrator</span></span>
+                                @{
+                                    var fullName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name;
+                                    var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Admin";
+                                }
+                                <span class="text-muted">Chào, <strong class="text-dark">@fullName</strong> <span class="badge bg-primary ms-1">@role</span></span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">

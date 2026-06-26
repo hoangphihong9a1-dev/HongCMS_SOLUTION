@@ -10,6 +10,7 @@ import BlogDetail from './pages/blog/detail';
 import Cart from './pages/cart';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ProfilePage from './pages/profile';
 
 // Context Providers
 import { AuthProvider } from './context/AuthContext';
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { path: 'cart', element: <Cart /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'profile', element: <ProfilePage /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

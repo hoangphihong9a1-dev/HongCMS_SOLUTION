@@ -4,6 +4,8 @@ using CMS.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace CMS.Backend.Controllers
 {
@@ -11,10 +13,12 @@ namespace CMS.Backend.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: /Product
@@ -38,8 +42,28 @@ namespace CMS.Backend.Controllers
         // POST: /Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Product model)
+        public IActionResult Create(Product model, IFormFile? ImageFile)
         {
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(ImageFile.FileName).ToLowerInvariant();
+                if (allowedExts.Contains(ext))
+                {
+                    var uniqueName = $"{Guid.NewGuid():N}{ext}";
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "products");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    var filePath = Path.Combine(uploadsDir, uniqueName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(stream);
+                    }
+
+                    model.ImageUrl = $"/uploads/products/{uniqueName}";
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Products.Add(model);
@@ -63,9 +87,37 @@ namespace CMS.Backend.Controllers
         // POST: /Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Product model)
+        public IActionResult Edit(int id, Product model, IFormFile? ImageFile)
         {
             if (id != model.Id) return NotFound();
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var allowedExts = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(ImageFile.FileName).ToLowerInvariant();
+                if (allowedExts.Contains(ext))
+                {
+                    var uniqueName = $"{Guid.NewGuid():N}{ext}";
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "products");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    var filePath = Path.Combine(uploadsDir, uniqueName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImageFile.CopyTo(stream);
+                    }
+
+                    model.ImageUrl = $"/uploads/products/{uniqueName}";
+                }
+            }
+            else
+            {
+                var existing = _context.Products.AsNoTracking().FirstOrDefault(p => p.Id == model.Id);
+                if (existing != null)
+                {
+                    model.ImageUrl = existing.ImageUrl;
+                }
+            }
 
             if (ModelState.IsValid)
             {

@@ -59,7 +59,11 @@ namespace CMS.Backend.Controllers
         // GET: /Order/Edit/5
         public IActionResult Edit(int id)
         {
-            var order = _context.Orders.Find(id);
+            var order = _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.OrderDetails!)
+                    .ThenInclude(od => od.Product)
+                .FirstOrDefault(o => o.Id == id);
             if (order == null) return NotFound();
 
             ViewBag.CustomerId = new SelectList(_context.Customers, "Id", "FullName", order.CustomerId);
@@ -69,18 +73,60 @@ namespace CMS.Backend.Controllers
         // POST: /Order/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Order model)
+        public IActionResult Edit(int id, Order model, string customerEmail)
         {
             if (id != model.Id) return NotFound();
 
+            // Loại bỏ kiểm tra hợp lệ của các thực thể liên kết (Customer, OrderDetails)
+            ModelState.Remove("Customer");
+            ModelState.Remove("OrderDetails");
+
             if (ModelState.IsValid)
             {
+                // Cập nhật email khách hàng nếu có thay đổi
+                var customer = _context.Customers.Find(model.CustomerId);
+                if (customer != null && !string.IsNullOrEmpty(customerEmail))
+                {
+                    customer.Email = customerEmail;
+                    _context.Customers.Update(customer);
+                }
+
                 _context.Orders.Update(model);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.CustomerId = new SelectList(_context.Customers, "Id", "FullName", model.CustomerId);
             return View(model);
+        }
+
+        // POST: /Order/RemoveDetail
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveDetail(int orderId, int detailId)
+        {
+            var detail = _context.OrderDetails
+                .Include(od => od.Product)
+                .FirstOrDefault(od => od.Id == detailId);
+
+            if (detail != null)
+            {
+                // Hoàn lại số lượng tồn kho cho sản phẩm
+                if (detail.Product != null)
+                {
+                    detail.Product.StockQuantity += detail.Quantity;
+                    _context.Products.Update(detail.Product);
+                }
+
+                _context.OrderDetails.Remove(detail);
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi đơn hàng và hoàn lại số lượng tồn kho.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy chi tiết sản phẩm cần xóa.";
+            }
+
+            return RedirectToAction(nameof(Edit), new { id = orderId });
         }
 
         // POST: /Order/Delete/5

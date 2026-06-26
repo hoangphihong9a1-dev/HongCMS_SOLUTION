@@ -21,16 +21,26 @@ namespace CMS.Backend.Controllers.Api
             _context = context;
         }
 
-        /// <summary>
-        /// Lấy tất cả danh mục bài viết
-        /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Category>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Category>>> GetAll(
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            var categories = await _context.Categories
+            var query = _context.Categories.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(c => c.Name.Contains(keyword) || (c.Description != null && c.Description.Contains(keyword)));
+            }
+
+            var categories = await query
                 .OrderBy(c => c.Name)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
             return Ok(categories);
         }
 
