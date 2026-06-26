@@ -7,7 +7,7 @@
 <div class="container mt-4" style="max-width: 600px;">
     <h2 class="text-success mb-4">✨ Thêm Sản Phẩm Mới</h2>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name" class="form-label fw-bold">Tên sản phẩm</label>
             <input asp-for="Name" class="form-control" required />
@@ -35,7 +35,12 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="ImageUrl" class="form-label fw-bold">Đường dẫn ảnh (URL)</label>
+            <label class="form-label fw-bold">Chọn tệp ảnh (Tải lên từ máy tính)</label>
+            <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageUrl" class="form-label fw-bold">Hoặc nhập đường dẫn ảnh (URL)</label>
             <input asp-for="ImageUrl" class="form-control" />
             <span asp-validation-for="ImageUrl" class="text-danger"></span>
         </div>

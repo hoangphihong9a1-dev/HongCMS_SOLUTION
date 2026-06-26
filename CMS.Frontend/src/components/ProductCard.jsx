@@ -8,7 +8,7 @@ export default function ProductCard({ product }) {
 
   // Định dạng hiển thị ảnh từ API/Uploads hoặc ảnh mẫu ngẫu nhiên nếu trống
   const getImageUrl = (url) => {
-    if (!url) return 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80'; // Ảnh placeholder thời trang
+    if (!url) return 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=400&q=80'; // Ảnh placeholder công nghệ
     if (url.startsWith('http')) return url;
     return `https://localhost:7296${url.startsWith('/') ? '' : '/'}${url}`;
   };
@@ -27,7 +27,7 @@ export default function ProductCard({ product }) {
             alt={product.name}
             className="product-card-image"
             onError={(e) => {
-              e.target.src = 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80';
+              e.target.src = 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=400&q=80';
             }}
           />
         </Link>
@@ -36,7 +36,7 @@ export default function ProductCard({ product }) {
 
       <div className="product-card-content">
         <span className="product-card-category">
-          {product.categoryProduct?.name || 'Thời trang'}
+          {product.categoryProduct?.name || 'Công nghệ'}
         </span>
         <h3 className="product-card-title">
           <Link to={`/product/${product.id}`}>{product.name}</Link>

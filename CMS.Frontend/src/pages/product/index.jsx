@@ -50,7 +50,7 @@ export default function ProductDetail() {
   };
 
   const getImageUrl = (url) => {
-    if (!url) return 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80';
+    if (!url) return 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=800&q=80';
     if (url.startsWith('http')) return url;
     return `https://localhost:7296${url.startsWith('/') ? '' : '/'}${url}`;
   };
@@ -92,7 +92,7 @@ export default function ProductDetail() {
               alt={product.name}
               className="detail-main-img"
               onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80';
+                e.target.src = 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=800&q=80';
               }}
             />
           </div>
@@ -100,7 +100,7 @@ export default function ProductDetail() {
           <div className="detail-info-box">
             <div className="detail-category-badge">
               <Tag size={13} />
-              <span>{product.categoryProduct?.name || 'Thời trang'}</span>
+              <span>{product.categoryProduct?.name || 'Công nghệ'}</span>
             </div>
 
             <h1 className="detail-title">{product.name}</h1>

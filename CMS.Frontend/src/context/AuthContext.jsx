@@ -42,6 +42,19 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('customer');
   };
 
+  const updateProfile = async (customerData) => {
+    try {
+      await authService.updateProfile(user.id, customerData);
+      const updatedUser = { ...user, ...customerData };
+      setUser(updatedUser);
+      localStorage.setItem('customer', JSON.stringify(updatedUser));
+      return updatedUser;
+    } catch (error) {
+      console.error('Update profile error in AuthContext:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -49,7 +62,8 @@ export function AuthProvider({ children }) {
       isAuthenticated: !!user,
       login,
       register,
-      logout
+      logout,
+      updateProfile
     }}>
       {children}
     </AuthContext.Provider>

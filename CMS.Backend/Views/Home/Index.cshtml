@@ -47,18 +47,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-4 col-md-6">
-            <div class="card bg-danger text-white mb-4 shadow-sm border-0">
-                <div class="card-body">
-                    <h3 class="mb-0 fw-bold">@Model.TotalUsers</h3>
-                    <div class="text-white-50">Total Users</div>
-                </div>
-                <div class="card-footer d-flex align-items-center justify-content-between border-top-0" style="background-color: rgba(0,0,0,0.1);">
-                    <a class="small text-white stretched-link text-decoration-none" asp-controller="User" asp-action="Index">View Details</a>
-                    <div class="small text-white">→</div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-xl-4 col-md-6">
+                <div class="card bg-danger text-white mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <h3 class="mb-0 fw-bold">@Model.TotalUsers</h3>
+                        <div class="text-white-50">Total Users</div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between border-top-0" style="background-color: rgba(0,0,0,0.1);">
+                        <a class="small text-white stretched-link text-decoration-none" asp-controller="User" asp-action="Index">View Details</a>
+                        <div class="small text-white">→</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         <div class="col-xl-4 col-md-6">
             <div class="card bg-info text-white mb-4 shadow-sm border-0">
                 <div class="card-body">

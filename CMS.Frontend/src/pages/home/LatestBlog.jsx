@@ -11,7 +11,7 @@ export default function LatestBlog({ posts }) {
       <div className="section-container">
         <div className="section-header-row">
           <div className="section-header-left">
-            <span className="section-subtitle">Xu Hướng Thời Trang</span>
+            <span className="section-subtitle">Tin Tức Công Nghệ</span>
             <h2 className="section-title">Tin Tức Mới Nhất</h2>
           </div>
           <Link to="/blog" className="view-all-link">

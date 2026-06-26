@@ -15,9 +15,26 @@ namespace CMS.Backend.Controllers.Api
         public UsersApiController(ApplicationDbContext context) { _context = context; }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAll()
+        public async Task<ActionResult<IEnumerable<User>>> GetAll(
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 12)
         {
-            return Ok(await _context.Users.ToListAsync());
+            var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(u => (u.Username != null && u.Username.Contains(keyword)) || 
+                                         (u.FullName != null && u.FullName.Contains(keyword)));
+            }
+
+            var users = await query
+                .OrderBy(u => u.Username)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(users);
         }
 
         [HttpGet("{id}")]

@@ -15,9 +15,18 @@ export default function Shop() {
 
   // States bộ lọc & sắp xếp
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [priceRange, setPriceRange] = useState(5000000); // Mặc định 5 triệu
+  const [priceRange, setPriceRange] = useState(50000000); // Mặc định 50 triệu
   const [sortBy, setSortBy] = useState('default');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // State phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
+  // Reset trang về 1 khi thay đổi bộ lọc hoặc tìm kiếm
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, priceRange, sortBy, searchTerm]);
 
   // Đọc params từ URL (?category=X hoặc ?search=Y)
   useEffect(() => {
@@ -68,6 +77,13 @@ export default function Shop() {
       return 0; // default (mặc định)
     });
 
+  // Tính toán phân trang
+  const totalPages = Math.ceil(filteredProducts.length / pageSize);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="shop-page-wrap">
       <div className="shop-layout-container">
@@ -94,7 +110,37 @@ export default function Shop() {
           />
 
           {!loading && filteredProducts.length > 0 && (
-            <ProductList products={filteredProducts} />
+            <>
+              <ProductList products={paginatedProducts} />
+              
+              {totalPages > 1 && (
+                <div className="shop-pagination">
+                  <button 
+                    disabled={currentPage === 1} 
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    className="pag-btn"
+                  >
+                    Trước
+                  </button>
+                  {Array.from({ length: totalPages }, (_, idx) => (
+                    <button
+                      key={idx + 1}
+                      onClick={() => setCurrentPage(idx + 1)}
+                      className={`pag-num ${currentPage === idx + 1 ? 'active' : ''}`}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+                  <button 
+                    disabled={currentPage === totalPages} 
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    className="pag-btn"
+                  >
+                    Sau
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
