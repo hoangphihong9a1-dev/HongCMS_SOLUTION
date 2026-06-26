@@ -3,6 +3,7 @@ using CMS.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Đăng ký ApplicationDbContext
@@ -18,6 +19,30 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlPath);
     }
+
+    // Cấu hình hiển thị nút Authorize cho Cookie Authentication
+    c.AddSecurityDefinition("CookieAuth", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Cookie,
+        Name = ".AspNetCore.Cookies",
+        Description = "Nhập cookie xác thực nếu cần thiết"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "CookieAuth"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 // Add services to the container.
